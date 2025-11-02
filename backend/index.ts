@@ -1,9 +1,24 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { readFileSync } from "fs";
+import GraphQLJSON from "graphql-type-json";
 
-const books = [
+type Review = {
+  id: string;
+  body: string;
+};
+
+type Book = {
+  id: string;
+  title: string;
+  author: string;
+  reviews: Review[];
+  isPublished: boolean;
+};
+
+const books: Book[] = [
   {
+    id: "1",
     title: "The Awakening",
     author: "Kate Chopin",
     reviews: [
@@ -12,17 +27,14 @@ const books = [
         body: "this is a good book",
       },
     ],
-  },
-  {
-    title: "City of Glass",
-    author: "Paul Auster",
-    reviews: [],
+    isPublished: true,
   },
 ];
 
 const typeDefs = `#graphql
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-  # This "Book" type defines the queryable fields for every book in our data source.
+  scalar JSON
+  # Comments in GraphQL
+
   type Review {
     id: ID
     body: String
@@ -33,30 +45,42 @@ const typeDefs = `#graphql
     books: [Book!]! # This list can't be null AND its list *items* can't be null
   }
 
+  # This "Book" type defines the queryable fields for every book in our data source.
   type Book {
-    title: String
-    author: String
+    id: ID!
+    title: String!
+    author: String!
     reviews: [Review]
-    isPublished: Boolean
+    isPublished: Boolean!
   }
+
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
     books: [Book]
-    numberSeven: Int! # Should always return 7
+    book(id: ID!): Book
   }
 
-  type AddBookMutationResponse{
+  type ApiResponse{
     code: String!
     success: Boolean!
     message: String!
-    book: Book
+    data: JSON
   }
+
+  # type AddBookMutationResponse{
+  #   code: String!
+  #   success: Boolean!
+  #   message: String!
+  #   book: Book
+  # }
 
   
   type Mutation {
-    addBook(title: String, author: String, isPublished: Boolean): AddBookMutationResponse
+    addBook(title: String, author: String, isPublished: Boolean): ApiResponse
+    updateBook(id: ID, title: String, author: String, isPublished: Boolean): ApiResponse
+    deleteBook(id: ID): ApiResponse
   }
 
 `;
@@ -64,19 +88,60 @@ const typeDefs = `#graphql
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
+  JSON: GraphQLJSON,
   Query: {
-    books: () => books,
-    numberSeven: () => 7,
+    books: () => books.filter((book) => book.isPublished !== false),
+    book: (_: any, { id }: { id: string }) => {
+      const book = books.find((book) => book.id === id);
+      return book;
+    },
   },
   Mutation: {
-    addBook: (_, { title, author, isPublished }) => {
-      const book = { title, author, isPublished, reviews: [] };
+    addBook: (
+      _: any,
+      {
+        title,
+        author,
+        isPublished,
+      }: { title: string; author: string; isPublished: boolean }
+    ) => {
+      const book: Book = { id: "2", title, author, isPublished, reviews: [] };
       books.push(book);
       return {
         code: 201,
         success: true,
         message: "book created successfully",
-        book,
+        data: { book },
+      };
+    },
+    updateBook: (
+      _: any,
+      {
+        id,
+        title,
+        author,
+        isPublished,
+      }: { id: string; title: string; author: string; isPublished: boolean }
+    ) => {
+      const book: Book = books.find((book) => book.id === id);
+      book.title = title;
+      book.author = author;
+      book.isPublished = isPublished;
+      return {
+        code: 201,
+        success: true,
+        message: "book updated successfully",
+        data: { book },
+      };
+    },
+    deleteBook: (_: any, { id }: { id: string }) => {
+      const index: number = books.findIndex((book) => book.id === id);
+      if (index !== -1) books.splice(index, 1);
+      return {
+        code: 200,
+        success: true,
+        message: "Book deleted",
+        data: { books },
       };
     },
   },
