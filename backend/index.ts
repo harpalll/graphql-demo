@@ -2,6 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { readFileSync } from "fs";
 import GraphQLJSON from "graphql-type-json";
+import { randomUUID } from "crypto"; // built into Node.js 19+
 
 type Review = {
   id: string;
@@ -105,7 +106,13 @@ const resolvers = {
         isPublished,
       }: { title: string; author: string; isPublished: boolean }
     ) => {
-      const book: Book = { id: "2", title, author, isPublished, reviews: [] };
+      const book: Book = {
+        id: randomUUID(),
+        title,
+        author,
+        isPublished,
+        reviews: [],
+      };
       books.push(book);
       return {
         code: 201,

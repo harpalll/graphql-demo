@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
+import { useEffect } from "react";
 
-const GET_BOOKS = gql`
+export const GET_BOOKS = gql`
   query GetBooks {
     books {
       id

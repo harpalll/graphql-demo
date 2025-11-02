@@ -119,11 +119,11 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
 
   return (
     <div className="w-full max-w-2xl mx-auto mt-10">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+      <div className="bg-white  rounded-xl shadow-lg border border-gray-200 ">
         <div className="p-6 sm:p-8 md:p-10">
           {/* Heading */}
-          <div className="flex justify-between items-center pb-6 border-b border-gray-200 dark:border-gray-700">
-            <h1 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white">
+          <div className="flex justify-between items-center pb-6 border-b border-gray-200 ">
+            <h1 className="text-3xl sm:text-4xl font-black text-gray-900">
               {submitLabel === "Save Changes"
                 ? "Edit Book Details"
                 : "Add a New Book"}
@@ -134,7 +134,7 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
           <form className="flex flex-col gap-6 pt-6" onSubmit={handleSubmit}>
             {/* Title */}
             <div className="flex flex-col gap-2">
-              <label className="text-gray-900 dark:text-white font-medium text-base">
+              <label className="text-gray-900 -medium text-base">
                 Book Title
               </label>
               <input
@@ -143,22 +143,20 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter book title"
                 required
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300  bg-gray-50  text-gray-900 :outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             {/* Author */}
             <div className="flex flex-col gap-2">
-              <label className="text-gray-900 dark:text-white font-medium text-base">
-                Author
-              </label>
+              <label className="text-gray-900 -medium text-base">Author</label>
               <input
                 type="text"
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
                 placeholder="e.g., F. Scott Fitzgerald"
                 required
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300  bg-gray-50  text-gray-900 :outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -169,12 +167,9 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
                 type="checkbox"
                 checked={published}
                 onChange={(e) => setPublished(e.target.checked)}
-                className="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                className="h-5 w-5 rounded border-gray-300  text-blue-600 focus:ring-2 focus:ring-blue-500"
               />
-              <label
-                htmlFor="published-status"
-                className="text-gray-900 dark:text-white"
-              >
+              <label htmlFor="published-status" className="text-gray-900">
                 Published
               </label>
             </div>
@@ -195,7 +190,7 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="w-full sm:w-auto px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 font-bold transition"
+                  className="w-full sm:w-auto px-6 py-3 border border-gray-300  rounded-lg text-gray-900 font-bold transition"
                 >
                   Cancel
                 </button>
