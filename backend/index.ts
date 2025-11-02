@@ -90,7 +90,7 @@ const typeDefs = `#graphql
 const resolvers = {
   JSON: GraphQLJSON,
   Query: {
-    books: () => books.filter((book) => book.isPublished !== false),
+    books: () => books,
     book: (_: any, { id }: { id: string }) => {
       const book = books.find((book) => book.id === id);
       return book;
